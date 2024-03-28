@@ -12,6 +12,9 @@ import { ParkInfo } from '../Functionality/ParkInfo'; // Importing the functiona
 import '../../Style/parkInfo.css';
 import ParkVideos from './ParkVideos';
 
+const lat = 10;
+const lon = 20;
+
 function ParkInfoComponent() {
     const [parkJSON, setParks] = useState([]);
     
@@ -46,6 +49,52 @@ function ParkInfoComponent() {
 
         fetchData();
     }, []);
+
+
+
+    function getWeather(city, state) {
+        const geocodeUrl = 'http://api.openweathermap.org/geo/1.0/direct?q=city,state,USA&limit&appid=37a8899c0a4fc5722469a0ddf73d04d4';
+
+        fetch(geocodeUrl)
+        .then(response =>{
+            if(!response.ok){
+                throw new Error('network response was not ok');
+            }
+            response.json();
+        })
+        .then(userData =>{
+            //process the retrieved user data
+            lat = userData.lat
+            lon = userData.lon 
+        })
+
+        const apiKey = 'YOUR_API_KEY'
+
+        const forecastUrl = 'api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid={API key}'
+    
+        fetch(currentWeatherURl)
+            .then(responze => response.json())
+            .then(data => {
+            
+                //NEED TO STORE DATA SOMEWHERE: 
+                //displayHourlyForecast(data.list); //recieve data
+                //localStorage.setItem(parkCode, JSON.stringify(json));
+                
+                data.list[i].main.temp_min
+                
+                for(i=0, i<5, i++) { 
+                    displayDailyForecast(data.list[i]); 
+                }
+                           
+            })
+    
+            .catch(error => {
+                console.error('error getting hourly forecast data:', error);    //if doesnt work 
+                alert('error getting hourly forecast data. try again');
+            }); 
+    }
+
+
 
     if(parkJSON.length>1){ //list all the parks
         return (
@@ -99,6 +148,12 @@ function ParkInfoComponent() {
                                         {park.addresses[0].stateCode}<br></br>
                                     </address>
                                     <br></br>
+                                    
+                                    <h3> 5 Day Weather Forecast </h3>
+                                    //getWeather(park.addresses[0].city, park.addresses[0].stateCode);  DOESNT WORK 
+                                    <p>{lat} {lon}</p>
+
+
                                 </center>
                             </div>
 
